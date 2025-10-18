@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My 90-Day Detox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="nav">
+        <a href="DETOX-1.html">Home</a>
+        <a href="Progress.html">My Progress</a>
+    </div>
+
+    <button id="themeToggle">🌙 Dark Mode</button>
+    
+    <h1>My 90-Day Social Media Detox</h1>
+    
+    <h2>My Goals</h2>
+    <p class="completed"><strong>Learn at least one skill i.e. Web Development</strong></p>
+    
+    <h2>My Replacement Activities</h2>
+    <ul>
+        <li>Practice coding</li>
+        <li>Go for a walk</li>
+    </ul>
+
+    <h2>Boredom First Aid</h2>
+    <button id="activityButton">I'm Bored - Help!</button>
+    <p id="suggestion"></p>
+    <p id="counterDisplay">Used: 0 times</p>
+    <button id="resetButton">Reset Counter</button>
+<div class="streak-counter">
+    <h3>STREAK:<span id="streakDisplay">0</span>Days</h3>
+</div>
+    <h2>Detox Log</h2>
+    <div class="log-entry">
+        <p><strong>✅Day1:</strong>HTML Basics Completed! </p>
+    </div>
+
+    <div class="log-entry">
+        <p><strong>✅ Day 2:</strong>Woke up bored. Chose to code instead of scroll. Feeling strong.</p>
+    </div>
+
+    <div class="log-entry">
+        <p><strong>✅Day 3:</strong>Checked in late.Fixed broken code after wasting time</p>
+    </div>
+
+    <script>
+        const activities = [
+            "Do 10 push-ups",
+            "Read one chapter of a book",
+            "Practice coding for 15 minutes",
+            "Go drink a glass of water",
+            "Write down 3 things you're grateful for",
+            "Step outside for 60 seconds",
+            "Clean and organize your room",
+            "Help out with chores",
+            "Visit a friend"
+        ];
+        
+        let counter = 0;
+
+        document.getElementById('activityButton').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * activities.length);
+            const randomActivity = activities[randomIndex];
+            document.getElementById('suggestion').textContent = randomActivity;
+
+            counter = counter + 1;
+            document.getElementById('counterDisplay').textContent = "Used: " + counter + " times";
+        });
+
+        document.getElementById('resetButton').addEventListener('click', function() {
+            counter = 0;
+            document.getElementById('counterDisplay').textContent = "Used: 0 times";
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                this.textContent = '☀️ Light Mode';
+            } else {
+                this.textContent = '🌙 Dark Mode';
+            }
+        });
+        const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = '☀️ Light Mode';
+    }
+}
+function updateStreak() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const lastVisitStr = localStorage.getItem('lastVisit');
+    const currentStreak = parseInt(localStorage.getItem('currentStreak')) || 0;
+
+    if (!lastVisitStr) {
+        localStorage.setItem('currentStreak', '1');
+        localStorage.setItem('lastVisit', today.toISOString());
+        document.getElementById('streakDisplay').textContent = '1';
+        return;
+    }
+
+    const lastVisit = new Date(lastVisitStr);
+    lastVisit.setHours(0, 0, 0, 0);
+
+    const timeDiff = today - lastVisit;
+    const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+    let newStreak = currentStreak;
+
+    if (daysDiff === 1) {
+        newStreak = currentStreak + 1;
+    } else if (daysDiff > 1) {
+        newStreak = 1;
+    }
+
+    localStorage.setItem('currentStreak', newStreak.toString());
+    localStorage.setItem('lastVisit', today.toISOString());
+    const streakElement = document.getElementById('streakDisplay');
+    streakElement.textContent = newStreak;
+
+    if (newStreak <= 2) {
+        streakElement.style.color = '#dc2626';
+    } else if (newStreak <= 7) {
+        streakElement.style.color = '#ea580c';
+    } else {
+        streakElement.style.color = '#16a34a';
+    }
+}
+
+updateStreak();
+    </script>
+</body>
+</html>
