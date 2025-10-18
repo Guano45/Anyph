@@ -1,62 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Anyph Kipngetich</title>
-    <link rel="stylesheet" href="portfolio.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">Anyph K</a>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="skills.html">Skills</a></li>
-                <li><a href="projects.html">Projects</a></li>
-                <li><a href="contact.html" class="active">Contact</a></li>
-            </ul>
+<div class="contact-form">
+    <form action="https://formsubmit.co/your-email@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New portfolio message">
+        <input type="hidden" name="_captcha" value="false">
+        
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
         </div>
-    </nav>
-
-    <section class="page-section">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-muted);">
-                I'm always interested in new opportunities and collaborations.
-            </p>
-            
-            <div class="contact-form">
-                <form>
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <button type="submit" class="cta-button">Send Message</button>
-                </form>
-            </div>
-
-            <div class="contact-links">
-                <a href="mailto:anyphbett9@gmail.com.com" class="contact-link">Email Me</a>
-                <a href="https://github.com/guano45" class="contact-link">GitHub</a>
-            </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
         </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Anyph Kipngetich. Built with pure HTML, CSS, and JavaScript.</p>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
         </div>
-    </footer>
-
-    <script src="portfolio.js"></script>
-</body>
-</html>
+        <button type="submit" class="cta-button">Send Message</button>
+    </form>
+</div>
