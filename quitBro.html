@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuitBro - Addiction Recovery Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            background-color: #0f3460;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #e94560;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e94560;
+            letter-spacing: 1px;
+        }
+        
+        .timer-section {
+            padding: 25px 20px;
+            text-align: center;
+            background-color: rgba(15, 52, 96, 0.7);
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .time-unit {
+            flex: 1;
+        }
+        
+        .time-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e94560;
+            background-color: rgba(22, 33, 62, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .time-label {
+            font-size: 12px;
+            color: #a9b7d0;
+            text-transform: uppercase;
+        }
+        
+        .track-info {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #a9b7d0;
+            border-bottom: 1px solid #2d3749;
+        }
+        
+        .track-date {
+            color: #e94560;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .actions {
+            display: flex;
+            padding: 15px 20px;
+            justify-content: center;
+            border-bottom: 1px solid #2d3749;
+        }
+        
+        .action-btn {
+            background-color: #0f3460;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #e94560;
+        }
+        
+        .challenges {
+            padding: 20px;
+        }
+        
+        .challenge-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #e94560;
+        }
+        
+        .challenge-item {
+            margin-bottom: 20px;
+        }
+        
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .challenge-name {
+            font-size: 14px;
+            color: #a9b7d0;
+        }
+        
+        .challenge-percent {
+            font-size: 14px;
+            color: #e94560;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #2d3749;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #e94560;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .panic-section {
+            padding: 15px 20px;
+            text-align: center;
+            border-top: 1px solid #2d3749;
+            border-bottom: 1px solid #2d3749;
+        }
+        
+        .panic-btn {
+            background-color: #e94560;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .panic-btn:hover {
+            background-color: #ff6b81;
+            transform: scale(1.05);
+        }
+        
+        .navigation {
+            display: flex;
+            padding: 15px 20px;
+            justify-content: space-between;
+        }
+        
+        .nav-item {
+            text-align: center;
+            color: #a9b7d0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .nav-item.active {
+            color: #e94560;
+            font-weight: bold;
+        }
+        
+        .nav-item:hover {
+            color: #e94560;
+        }
+        
+        .badges-section {
+            padding: 20px;
+            display: none;
+        }
+        
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .badge {
+            background-color: #2d3749;
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .badge.locked {
+            opacity: 0.5;
+        }
+        
+        .badge-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+            color: #e94560;
+        }
+        
+        .badge-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .badge-days {
+            font-size: 10px;
+            color: #a9b7d0;
+        }
+        
+        .badge.unlocked .badge-icon {
+            color: gold;
+        }
+        
+        .badge.unlocked {
+            background-color: #0f3460;
+            border: 1px solid gold;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #16213e;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #e94560;
+        }
+        
+        .modal p {
+            margin-bottom: 20px;
+            color: #a9b7d0;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .modal-confirm {
+            background-color: #e94560;
+            color: white;
+        }
+        
+        .modal-cancel {
+            background-color: #2d3749;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">QUITBRO</div>
+        </div>
+        
+        <div class="timer-section">
+            <div class="timer">
+                <div class="time-unit">
+                    <div class="time-value" id="days">00</div>
+                    <div class="time-label">days</div>
+                </div>
+                <div class="time-unit">
+                    <div class="time-value" id="hours">00</div>
+                    <div class="time-label">hours</div>
+                </div>
+                <div class="time-unit">
+                    <div class="time-value" id="minutes">00</div>
+                    <div class="time-label">minutes</div>
+                </div>
+                <div class="time-unit">
+                    <div class="time-value" id="seconds">00</div>
+                    <div class="time-label">seconds</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="track-info">
+            You're on track to quit by:<br>
+            <div class="track-date" id="quit-date">--</div>
+        </div>
+        
+        <div class="actions">
+            <button class="action-btn" id="reset-btn">Reset</button>
+        </div>
+        
+        <div class="challenges">
+            <div class="challenge-title">Recovery Challenges</div>
+            <div class="challenge-item">
+                <div class="challenge-header">
+                    <div class="challenge-name">First 21 Day Challenge</div>
+                    <div class="challenge-percent" id="challenge-21-percent">0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="challenge-21-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="challenge-item">
+                <div class="challenge-header">
+                    <div class="challenge-name">Brain Rewiring (90 Days)</div>
+                    <div class="challenge-percent" id="challenge-brain-percent">0%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="challenge-brain-progress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panic-section">
+            <button class="panic-btn">Panic Button</button>
+        </div>
+        
+        <div class="badges-section" id="badges-section">
+            <div class="challenge-title">Your Badges</div>
+            <div class="badge-grid">
+                <div class="badge locked" id="badge-7">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">First Step</div>
+                    <div class="badge-days">7 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-14">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Fortnight</div>
+                    <div class="badge-days">14 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-21">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Habit Forming</div>
+                    <div class="badge-days">21 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-45">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Transformation</div>
+                    <div class="badge-days">45 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-90">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Milestone</div>
+                    <div class="badge-days">90 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-200">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Champion</div>
+                    <div class="badge-days">200 days clean</div>
+                </div>
+                <div class="badge locked" id="badge-365">
+                    <div class="badge-icon">★</div>
+                    <div class="badge-name">Victory</div>
+                    <div class="badge-days">365 days clean</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <div class="nav-item active" data-tab="home">Home</div>
+            <div class="nav-item" data-tab="badges">Badges</div>
+            <div class="nav-item" data-tab="me">Me</div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal" id="reset-modal">
+        <div class="modal-content">
+            <h3>Reset Your Progress?</h3>
+            <p>Are you sure you want to reset your progress? This will set your timer back to 0 days.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-cancel" id="cancel-reset">Cancel</button>
+                <button class="modal-btn modal-confirm" id="confirm-reset">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User data management
+        function getUserData() {
+            const savedData = localStorage.getItem('quitbro-user-data');
+            if (savedData) {
+                return JSON.parse(savedData);
+            } else {
+                // Initialize with current date if no data exists
+                const startDate = new Date();
+                return {
+                    startDate: startDate.toISOString(),
+                    lastUpdate: startDate.toISOString(),
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0
+                };
+            }
+        }
+        
+        function saveUserData(data) {
+            localStorage.setItem('quitbro-user-data', JSON.stringify(data));
+        }
+        
+        // Calculate days passed since start date
+        function calculateDaysSinceStart(startDate) {
+            const now = new Date();
+            const start = new Date(startDate);
+            const diffTime = now - start;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+        
+        // Timer functionality
+        let userData = getUserData();
+        let days = userData.days;
+        let hours = userData.hours;
+        let minutes = userData.minutes;
+        let seconds = userData.seconds;
+        let timerInterval;
+        
+        // Check if we need to update days based on time passed
+        function updateDaysIfNeeded() {
+            const daysSinceStart = calculateDaysSinceStart(userData.startDate);
+            if (daysSinceStart > days) {
+                days = daysSinceStart;
+                userData.days = days;
+                saveUserData(userData);
+                updateProgress();
+                updateBadges();
+            }
+        }
+        
+        function startTimer() {
+            updateDaysIfNeeded();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function updateTimer() {
+            seconds++;
+            
+            if (seconds >= 60) {
+                seconds = 0;
+                minutes++;
+            }
+            
+            if (minutes >= 60) {
+                minutes = 0;
+                hours++;
+            }
+            
+            if (hours >= 24) {
+                hours = 0;
+                days++;
+                updateProgress();
+                updateBadges();
+            }
+            
+            // Update the display
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            
+            // Update user data
+            userData.lastUpdate = new Date().toISOString();
+            userData.days = days;
+            userData.hours = hours;
+            userData.minutes = minutes;
+            userData.seconds = seconds;
+            saveUserData(userData);
+            
+            // Update quit date (3 months from start)
+            const startDate = new Date(userData.startDate);
+            const quitDate = new Date(startDate);
+            quitDate.setMonth(quitDate.getMonth() + 3);
+            document.getElementById('quit-date').textContent = formatDate(quitDate);
+        }
+        
+        function formatDate(date) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+            return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+        }
+        
+        // Update progress bars based on days
+        function updateProgress() {
+            // 21-day challenge progress
+            const progress21 = Math.min(100, Math.floor((days / 21) * 100));
+            document.getElementById('challenge-21-progress').style.width = `${progress21}%`;
+            document.getElementById('challenge-21-percent').textContent = `${progress21}%`;
+            
+            // Brain rewiring progress (90 days)
+            const progressBrain = Math.min(100, Math.floor((days / 90) * 100));
+            document.getElementById('challenge-brain-progress').style.width = `${progressBrain}%`;
+            document.getElementById('challenge-brain-percent').textContent = `${progressBrain}%`;
+        }
+        
+        // Update badges based on days
+        function updateBadges() {
+            const badges = [
+                { id: 'badge-7', days: 7 },
+                { id: 'badge-14', days: 14 },
+                { id: 'badge-21', days: 21 },
+                { id: 'badge-45', days: 45 },
+                { id: 'badge-90', days: 90 },
+                { id: 'badge-200', days: 200 },
+                { id: 'badge-365', days: 365 }
+            ];
+            
+            badges.forEach(badge => {
+                const badgeElement = document.getElementById(badge.id);
+                if (days >= badge.days) {
+                    badgeElement.classList.add('unlocked');
+                    badgeElement.classList.remove('locked');
+                } else {
+                    badgeElement.classList.remove('unlocked');
+                    badgeElement.classList.add('locked');
+                }
+            });
+        }
+        
+        // Reset functionality
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('reset-modal').style.display = 'flex';
+        });
+        
+        document.getElementById('cancel-reset').addEventListener('click', function() {
+            document.getElementById('reset-modal').style.display = 'none';
+        });
+        
+        document.getElementById('confirm-reset').addEventListener('click', function() {
+            // Reset timer to 0
+            days = 0;
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+            
+            // Update start date to now
+            userData.startDate = new Date().toISOString();
+            userData.lastUpdate = new Date().toISOString();
+            userData.days = 0;
+            userData.hours = 0;
+            userData.minutes = 0;
+            userData.seconds = 0;
+            saveUserData(userData);
+            
+            // Update display
+            document.getElementById('seconds').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('days').textContent = '00';
+            
+            // Update progress bars
+            updateProgress();
+            
+            // Update badges
+            updateBadges();
+            
+            // Close modal
+            document.getElementById('reset-modal').style.display = 'none';
+            
+            // Show encouragement message
+            alert("It's okay to start over. Every journey has setbacks. You can do this!");
+        });
+        
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Show/hide sections based on selection
+                const tab = this.getAttribute('data-tab');
+                
+                if (tab === 'badges') {
+                    document.getElementById('badges-section').style.display = 'block';
+                    document.querySelector('.challenges').style.display = 'none';
+                    document.querySelector('.panic-section').style.display = 'none';
+                } else {
+                    document.getElementById('badges-section').style.display = 'none';
+                    document.querySelector('.challenges').style.display = 'block';
+                    document.querySelector('.panic-section').style.display = 'block';
+                }
+            });
+        });
+        
+        // Panic button functionality
+        document.querySelector('.panic-btn').addEventListener('click', function() {
+            const messages = [
+                "Take a deep breath. You can do this!",
+                "Remember why you started this journey.",
+                "This craving will pass. Stay strong!",
+                "Think about how far you've come.",
+                "You are stronger than your addiction.",
+                "Take a walk or drink a glass of water.",
+                "Call a friend for support.",
+                "You've got this! One moment at a time."
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            alert(randomMessage);
+        });
+        
+        // Initialize the app
+        startTimer();
+        updateProgress();
+        updateBadges();
+        
+        // Set the quit date (3 months from start)
+        const startDate = new Date(userData.startDate);
+        const quitDate = new Date(startDate);
+        quitDate.setMonth(quitDate.getMonth() + 3);
+        document.getElementById('quit-date').textContent = formatDate(quitDate);
+    </script>
+</body>
+</html>
