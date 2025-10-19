@@ -11,6 +11,10 @@
         <a href="DETOX-1.html">Home</a>
         <a href="Progress.html">My Progress</a>
     </div>
+    <div style="text-align: right; padding: 1rem;">
+    Welcome, <span id="usernameDisplay"></span> 
+    <button onclick="logout()" style="margin-left: 1rem;">Logout</button>
+</div>
 
     <button id="themeToggle">🌙 Dark Mode</button>
     
@@ -135,6 +139,11 @@ function updateStreak() {
 }
 
 updateStreak();
+    const currentUser = checkAuth();
+if (currentUser) {
+    document.getElementById('usernameDisplay').textContent = currentUser;
+}    
     </script>
 </body>
+
 </html>
