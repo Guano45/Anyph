@@ -11,13 +11,12 @@
         <a href="DETOX-1.html">Home</a>
         <a href="Progress.html">My Progress</a>
     </div>
-    <div style="text-align: right; padding: 1rem;">
-    Welcome, <span id="usernameDisplay"></span> 
-    <button onclick="logout()" style="margin-left: 1rem;">Logout</button>
-</div>
 
     <button id="themeToggle">🌙 Dark Mode</button>
-    
+    <div style="text-align: right; padding: 1rem;">
+        Welcome, <span id="usernameDisplay"></span> 
+        <button onclick="logout()" style="margin-left: 1rem;">Logout</button>
+    </div>
     <h1>My 90-Day Social Media Detox</h1>
     
     <h2>My Goals</h2>
@@ -139,11 +138,10 @@ function updateStreak() {
 }
 
 updateStreak();
-    const currentUser = checkAuth();
+const currentUser = checkAuth();
 if (currentUser) {
     document.getElementById('usernameDisplay').textContent = currentUser;
-}    
+}
     </script>
 </body>
-
 </html>
