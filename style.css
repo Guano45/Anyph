@@ -1,3 +1,122 @@
+:root {
+    --bg-color: #f0f8ff;
+    --text-color: #333;
+    --container-bg: #e0f2e1;
+    --header-color: #2c5530;
+    --border-color: #4a7c59;
+    --log-bg: #fff3cd;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1 {
+    color: var(--header-color);
+    text-align: center;
+    border-bottom: 3px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: var(--header-color);
+}
+
+ul {
+    background-color: var(--container-bg);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 40px;
+    list-style: none;
+}
+
+li {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.completed {
+    color: #2c5530;
+    background-color: #d4edda;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.log-entry {
+    background-color: var(--log-bg);
+    border-left: 5px solid #ffc107;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+#activityButton, #resetButton, #themeToggle {
+    background-color: #4a7c59;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+#activityButton:hover, #resetButton:hover, #themeToggle:hover {
+    background-color: #2c5530;
+}
+
+.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --container-bg: #2d2d2d;
+    --header-color: #4a7c59;
+    --border-color: #4a7c59;
+    --log-bg: #3d3d00;
+}
+
+.dark-mode .completed {
+    background-color: #1e3b24;
+    color: #a3d6a5;
+}
+.nav {
+text-align: center;
+margin: 20px 0;
+}
+
+.nav a {
+background-color: #4a7c59;
+color: white;
+padding: 10px 20px;
+text-decoration: none;
+border-radius: 5px;
+margin: 0 10px;
+}
+
+.nav a:hover {
+background-color: #2c5530;
+}
+.streak-counter {
+    background-color: var(--container-bg);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.dark-mode .streak-counter {
+    background-color: var(--container-bg);
+}
 .login-container {
     min-height: 100vh;
     display: flex;
