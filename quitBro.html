@@ -183,80 +183,6 @@
             transform: scale(1.05);
         }
         
-        .navigation {
-            display: flex;
-            padding: 15px 20px;
-            justify-content: space-between;
-        }
-        
-        .nav-item {
-            text-align: center;
-            color: #a9b7d0;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-        }
-        
-        .nav-item.active {
-            color: #e94560;
-            font-weight: bold;
-        }
-        
-        .nav-item:hover {
-            color: #e94560;
-        }
-        
-        .badges-section {
-            padding: 20px;
-            display: none;
-        }
-        
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .badge {
-            background-color: #2d3749;
-            border-radius: 10px;
-            padding: 15px 10px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        
-        .badge.locked {
-            opacity: 0.5;
-        }
-        
-        .badge-icon {
-            font-size: 30px;
-            margin-bottom: 8px;
-            color: #e94560;
-        }
-        
-        .badge-name {
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .badge-days {
-            font-size: 10px;
-            color: #a9b7d0;
-        }
-        
-        .badge.unlocked .badge-icon {
-            color: gold;
-        }
-        
-        .badge.unlocked {
-            background-color: #0f3460;
-            border: 1px solid gold;
-        }
-        
         .modal {
             display: none;
             position: fixed;
@@ -373,54 +299,7 @@
         </div>
         
         <div class="panic-section">
-            <button class="panic-btn">Panic Button</button>
-        </div>
-        
-        <div class="badges-section" id="badges-section">
-            <div class="challenge-title">Your Badges</div>
-            <div class="badge-grid">
-                <div class="badge locked" id="badge-7">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">First Step</div>
-                    <div class="badge-days">7 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-14">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Fortnight</div>
-                    <div class="badge-days">14 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-21">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Habit Forming</div>
-                    <div class="badge-days">21 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-45">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Transformation</div>
-                    <div class="badge-days">45 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-90">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Milestone</div>
-                    <div class="badge-days">90 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-200">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Champion</div>
-                    <div class="badge-days">200 days clean</div>
-                </div>
-                <div class="badge locked" id="badge-365">
-                    <div class="badge-icon">★</div>
-                    <div class="badge-name">Victory</div>
-                    <div class="badge-days">365 days clean</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="navigation">
-            <div class="nav-item active" data-tab="home">Home</div>
-            <div class="nav-item" data-tab="badges">Badges</div>
-            <div class="nav-item" data-tab="me">Me</div>
+            <button class="panic-btn" id="panic-btn">Panic Button</button>
         </div>
     </div>
 
@@ -436,22 +315,37 @@
         </div>
     </div>
 
+    <!-- Panic Help Modal -->
+    <div class="modal" id="panic-modal">
+        <div class="modal-content">
+            <h3>Need Help Right Now?</h3>
+            <p>Take a deep breath. You can get through this craving.</p>
+            <p><strong>Try these immediately:</strong></p>
+            <ul style="text-align: left; margin: 15px 0; color: #a9b7d0;">
+                <li>Drink a glass of cold water</li>
+                <li>Do 10 push-ups or jumping jacks</li>
+                <li>Call a supportive friend</li>
+                <li>Take a 5-minute walk outside</li>
+                <li>Practice deep breathing for 2 minutes</li>
+            </ul>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-confirm" id="close-panic">I'll Try This</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // User data management
+        // User data management - FIXED VERSION
         function getUserData() {
             const savedData = localStorage.getItem('quitbro-user-data');
             if (savedData) {
                 return JSON.parse(savedData);
             } else {
-                // Initialize with current date if no data exists
+                // Initialize with current date and time
                 const startDate = new Date();
                 return {
-                    startDate: startDate.toISOString(),
-                    lastUpdate: startDate.toISOString(),
-                    days: 0,
-                    hours: 0,
-                    minutes: 0,
-                    seconds: 0
+                    startDate: startDate.getTime(), // Store as timestamp
+                    totalSeconds: 0
                 };
             }
         }
@@ -460,73 +354,63 @@
             localStorage.setItem('quitbro-user-data', JSON.stringify(data));
         }
         
-        // Calculate days passed since start date
-        function calculateDaysSinceStart(startDate) {
-            const now = new Date();
-            const start = new Date(startDate);
-            const diffTime = now - start;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
+        // Calculate time passed since start
+        function calculateTimePassed(startTimestamp) {
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - startTimestamp) / 1000);
+            return elapsedSeconds;
         }
         
-        // Timer functionality
+        // Convert total seconds to days, hours, minutes, seconds
+        function secondsToTime(totalSeconds) {
+            const days = Math.floor(totalSeconds / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
+            
+            return { days, hours, minutes, seconds };
+        }
+        
+        // Timer functionality - FIXED VERSION
         let userData = getUserData();
-        let days = userData.days;
-        let hours = userData.hours;
-        let minutes = userData.minutes;
-        let seconds = userData.seconds;
+        let totalSeconds = userData.totalSeconds;
         let timerInterval;
         
-        // Check if we need to update days based on time passed
-        function updateDaysIfNeeded() {
-            const daysSinceStart = calculateDaysSinceStart(userData.startDate);
-            if (daysSinceStart > days) {
-                days = daysSinceStart;
-                userData.days = days;
-                saveUserData(userData);
-                updateProgress();
-                updateBadges();
-            }
-        }
-        
         function startTimer() {
-            updateDaysIfNeeded();
+            // Calculate actual time passed since start
+            const actualSecondsPassed = calculateTimePassed(userData.startDate);
+            
+            // Use whichever is larger - our stored time or actual time passed
+            totalSeconds = Math.max(totalSeconds, actualSecondsPassed);
+            
+            // Update display immediately
+            updateDisplay();
+            
+            // Start counting
             timerInterval = setInterval(updateTimer, 1000);
         }
         
         function updateTimer() {
-            seconds++;
-            
-            if (seconds >= 60) {
-                seconds = 0;
-                minutes++;
-            }
-            
-            if (minutes >= 60) {
-                minutes = 0;
-                hours++;
-            }
-            
-            if (hours >= 24) {
-                hours = 0;
-                days++;
-                updateProgress();
-                updateBadges();
-            }
+            totalSeconds++;
             
             // Update the display
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            updateDisplay();
             
-            // Update user data
-            userData.lastUpdate = new Date().toISOString();
-            userData.days = days;
-            userData.hours = hours;
-            userData.minutes = minutes;
-            userData.seconds = seconds;
+            // Update progress bars
+            updateProgress();
+            
+            // Save current state
+            userData.totalSeconds = totalSeconds;
             saveUserData(userData);
+        }
+        
+        function updateDisplay() {
+            const time = secondsToTime(totalSeconds);
+            
+            document.getElementById('seconds').textContent = time.seconds.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = time.minutes.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = time.hours.toString().padStart(2, '0');
+            document.getElementById('days').textContent = time.days.toString().padStart(2, '0');
             
             // Update quit date (3 months from start)
             const startDate = new Date(userData.startDate);
@@ -538,44 +422,23 @@
         function formatDate(date) {
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 
                            'July', 'August', 'September', 'October', 'November', 'December'];
-            return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+            return ${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()};
         }
         
         // Update progress bars based on days
         function updateProgress() {
+            const time = secondsToTime(totalSeconds);
+            const days = time.days;
+            
             // 21-day challenge progress
             const progress21 = Math.min(100, Math.floor((days / 21) * 100));
-            document.getElementById('challenge-21-progress').style.width = `${progress21}%`;
-            document.getElementById('challenge-21-percent').textContent = `${progress21}%`;
+            document.getElementById('challenge-21-progress').style.width = ${progress21}%;
+            document.getElementById('challenge-21-percent').textContent = ${progress21}%;
             
             // Brain rewiring progress (90 days)
             const progressBrain = Math.min(100, Math.floor((days / 90) * 100));
-            document.getElementById('challenge-brain-progress').style.width = `${progressBrain}%`;
-            document.getElementById('challenge-brain-percent').textContent = `${progressBrain}%`;
-        }
-        
-        // Update badges based on days
-        function updateBadges() {
-            const badges = [
-                { id: 'badge-7', days: 7 },
-                { id: 'badge-14', days: 14 },
-                { id: 'badge-21', days: 21 },
-                { id: 'badge-45', days: 45 },
-                { id: 'badge-90', days: 90 },
-                { id: 'badge-200', days: 200 },
-                { id: 'badge-365', days: 365 }
-            ];
-            
-            badges.forEach(badge => {
-                const badgeElement = document.getElementById(badge.id);
-                if (days >= badge.days) {
-                    badgeElement.classList.add('unlocked');
-                    badgeElement.classList.remove('locked');
-                } else {
-                    badgeElement.classList.remove('unlocked');
-                    badgeElement.classList.add('locked');
-                }
-            });
+            document.getElementById('challenge-brain-progress').style.width = ${progressBrain}%;
+            document.getElementById('challenge-brain-percent').textContent = ${progressBrain}%;
         }
         
         // Reset functionality
@@ -588,93 +451,34 @@
         });
         
         document.getElementById('confirm-reset').addEventListener('click', function() {
-            // Reset timer to 0
-            days = 0;
-            hours = 0;
-            minutes = 0;
-            seconds = 0;
+            // Reset everything
+            const startDate = new Date();
+            userData = {
+                startDate: startDate.getTime(),
+                totalSeconds: 0
+            };
+            totalSeconds = 0;
             
-            // Update start date to now
-            userData.startDate = new Date().toISOString();
-            userData.lastUpdate = new Date().toISOString();
-            userData.days = 0;
-            userData.hours = 0;
-            userData.minutes = 0;
-            userData.seconds = 0;
             saveUserData(userData);
-            
-            // Update display
-            document.getElementById('seconds').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('days').textContent = '00';
-            
-            // Update progress bars
+            updateDisplay();
             updateProgress();
             
-            // Update badges
-            updateBadges();
-            
-            // Close modal
             document.getElementById('reset-modal').style.display = 'none';
-            
-            // Show encouragement message
-            alert("It's okay to start over. Every journey has setbacks. You can do this!");
-        });
-        
-        // Navigation functionality
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Remove active class from all items
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                
-                // Add active class to clicked item
-                this.classList.add('active');
-                
-                // Show/hide sections based on selection
-                const tab = this.getAttribute('data-tab');
-                
-                if (tab === 'badges') {
-                    document.getElementById('badges-section').style.display = 'block';
-                    document.querySelector('.challenges').style.display = 'none';
-                    document.querySelector('.panic-section').style.display = 'none';
-                } else {
-                    document.getElementById('badges-section').style.display = 'none';
-                    document.querySelector('.challenges').style.display = 'block';
-                    document.querySelector('.panic-section').style.display = 'block';
-                }
-            });
         });
         
         // Panic button functionality
-        document.querySelector('.panic-btn').addEventListener('click', function() {
-            const messages = [
-                "Take a deep breath. You can do this!",
-                "Remember why you started this journey.",
-                "This craving will pass. Stay strong!",
-                "Think about how far you've come.",
-                "You are stronger than your addiction.",
-                "Take a walk or drink a glass of water.",
-                "Call a friend for support.",
-                "You've got this! One moment at a time."
-            ];
-            
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            alert(randomMessage);
+        document.getElementById('panic-btn').addEventListener('click', function() {
+            document.getElementById('panic-modal').style.display = 'flex';
         });
         
-        // Initialize the app
-        startTimer();
-        updateProgress();
-        updateBadges();
+        document.getElementById('close-panic').addEventListener('click', function() {
+            document.getElementById('panic-modal').style.display = 'none';
+        });
         
-        // Set the quit date (3 months from start)
-        const startDate = new Date(userData.startDate);
-        const quitDate = new Date(startDate);
-        quitDate.setMonth(quitDate.getMonth() + 3);
-        document.getElementById('quit-date').textContent = formatDate(quitDate);
+        // Start the timer when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            startTimer();
+        });
     </script>
 </body>
 </html>
